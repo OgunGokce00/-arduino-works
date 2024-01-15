@@ -1,5 +1,6 @@
 int pot = A0;
 int val;
+// değişken oluşturun
 
 void setup() {
   pinMode(8, OUTPUT);
