@@ -1,0 +1,96 @@
+int sol2_t = 13; int sol2_e = 12;  
+int sol1_t = 11; int sol1_e = 10; 
+int sag1_t = 9; int sag1_e = 8; 
+int sag2_t = 7; int sag2_e = 6; 
+ 
+void setup(){
+  pinMode(sol2_t, OUTPUT); pinMode(sol2_e,INPUT); 
+  pinMode(sol1_t, OUTPUT); pinMode(sol1_e,INPUT);
+  pinMode(sag1_t, OUTPUT); pinMode(sag1_e,INPUT);
+  pinMode(sag2_t, OUTPUT); pinMode(sag2_e,INPUT);
+  pinMode(A0,OUTPUT); pinMode(A1,OUTPUT);
+  pinMode(A2,OUTPUT); pinMode(A3,OUTPUT);
+  pinMode(A4,OUTPUT); pinMode(A5,OUTPUT);
+  pinMode(2,OUTPUT);//buzzer
+  Serial.begin(9600); 
+}
+void loop()
+{
+  long mesafe_sol2=mesafe_olcumu(sol2_t,sol2_e);
+  long mesafe_sol1=mesafe_olcumu(sol1_t,sol1_e);
+  long mesafe_sag1=mesafe_olcumu(sag1_t,sag1_e);
+  long mesafe_sag2=mesafe_olcumu(sag2_t,sag2_e);
+  
+  int en_kucuk=mesafe_sol1;
+  if(mesafe_sol2<en_kucuk) en_kucuk=mesafe_sol2;
+  if(mesafe_sag1<en_kucuk) en_kucuk=mesafe_sag1;
+  if(mesafe_sag2<en_kucuk) en_kucuk=mesafe_sag2;
+  Serial.print("En kucuk deger:");
+  Serial.print(en_kucuk);
+  Serial.println(" cm");
+  if(en_kucuk>3&&en_kucuk<50)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,HIGH);
+    digitalWrite(A2,HIGH); digitalWrite(A3,HIGH);
+    digitalWrite(A4,HIGH); digitalWrite(A5,HIGH);
+    digitalWrite(2,HIGH);
+    
+  }
+  else if(en_kucuk>=50&&en_kucuk<100)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,HIGH);
+    digitalWrite(A2,HIGH); digitalWrite(A3,HIGH);
+    digitalWrite(A4,HIGH); digitalWrite(A5,LOW);
+    digitalWrite(2,LOW);
+  }
+  else if(en_kucuk>=100&&en_kucuk<150)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,HIGH);
+    digitalWrite(A2,HIGH); digitalWrite(A3,HIGH);
+    digitalWrite(A4,LOW); digitalWrite(A5,LOW);
+    digitalWrite(2,LOW);
+  }
+   else if(en_kucuk>=150&&en_kucuk<200)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,HIGH);
+    digitalWrite(A2,HIGH); digitalWrite(A3,LOW);
+    digitalWrite(A4,LOW); digitalWrite(A5,LOW);
+     digitalWrite(2,LOW);
+  }
+  else if(en_kucuk>=200&&en_kucuk<250)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,HIGH);
+    digitalWrite(A2,LOW); digitalWrite(A3,LOW);
+    digitalWrite(A4,LOW); digitalWrite(A5,LOW);
+    digitalWrite(2,LOW);
+  }
+  else if(en_kucuk>=250&&en_kucuk<300)
+  {
+    digitalWrite(A0,HIGH); digitalWrite(A1,LOW);
+    digitalWrite(A2,LOW); digitalWrite(A3,LOW);
+    digitalWrite(A4,LOW); digitalWrite(A5,LOW);
+    digitalWrite(2,LOW);
+  }
+  else
+  {
+  Serial.println("Menzil Disi");
+    digitalWrite(A0,LOW); digitalWrite(A1,LOW);
+    digitalWrite(A2,LOW); digitalWrite(A3,LOW);
+    digitalWrite(A4,LOW); digitalWrite(A5,LOW);
+    digitalWrite(2,LOW);
+  }
+  
+}
+ 
+  long mesafe_olcumu(int trig, int echo)
+  {
+  digitalWrite(trig, LOW); 
+  delayMicroseconds(5);
+  digitalWrite(trig, HIGH); 
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);  
+  long zaman= pulseIn(echo, HIGH);
+  long mesafe= (zaman/29.1)/2;    
+  delay(50);
+  return mesafe;
+  }
