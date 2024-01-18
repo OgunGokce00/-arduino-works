@@ -1,0 +1,28 @@
+#include <IRremote.h>
+int IR_RECEIVER_PIN = 11; 
+IRrecv irReceiver(IR_RECEIVER_PIN);
+decode_results results;
+
+
+void setup()
+{
+  irReceiver.enableIRIn();  
+  Serial.begin(9600);
+  pinMode(5,OUTPUT);
+}
+void loop() {
+   if (IrReceiver.decode()) { 
+    unsigned long code = IrReceiver.decodedIRData.decodedRawData;
+    Serial.println(code,HEX);
+	irReceiver.resume();
+    if(code==0xEF10BF00)//1 butonuna basıldıysa
+    {
+    digitalWrite(5,HIGH);
+    }
+    else if(code==0xEE11BF00) //2 butonuna basıldıysa
+    {
+    digitalWrite(5,LOW);
+    }
+    }
+  delay(100);
+}
